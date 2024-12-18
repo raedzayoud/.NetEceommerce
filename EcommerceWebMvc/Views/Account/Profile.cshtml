@@ -1,0 +1,120 @@
+﻿@model ProfileDto
+@using EcommerceWebMvc.Models.BestStoreMVC.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var appUser = await UserManager.GetUserAsync(User);
+
+    string userRole = "";
+    if (User.IsInRole("client")) userRole = "Client";
+}
+
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto rounded shadow-lg p-4 bg-white">
+            <h2 class="mb-3 text-center">Profil</h2>
+            <hr class="mb-4" />
+
+            @if (ViewBag.ErrorMessage != null)
+            {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
+                            <strong>@ViewBag.ErrorMessage</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+            }
+            else if (ViewBag.SuccessMessage != null)
+            {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            <strong>@ViewBag.SuccessMessage</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+            }
+
+            <div class="list-group mb-3">
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Prénom</span>
+                    <span>@appUser?.FirstName</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Nom de famille</span>
+                    <span>@appUser?.LastName</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Email</span>
+                    <span>@appUser?.Email</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Téléphone</span>
+                    <span>@appUser?.PhoneNumber</span>
+                </div>
+                <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <span class="fw-bold">Adresse</span>
+                    <span>@appUser?.Address</span>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#EditProfileModal">
+                    <i class="bi bi-pencil-square me-2"></i>Modifier le profil
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+// model 
+<div class="modal fade" id="EditProfileModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Modifier le profil</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Prénom</label>
+                        <input class="form-control" asp-for="FirstName" placeholder="Entrez votre prénom">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Nom de famille</label>
+                        <input class="form-control" asp-for="LastName" placeholder="Entrez votre nom de famille">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" asp-for="Email" placeholder="Entrez votre email">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Téléphone</label>
+                        <input class="form-control" asp-for="PhoneNumber" placeholder="Entrez votre numéro de téléphone">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Adresse</label>
+                        <input class="form-control" asp-for="Address" placeholder="Entrez votre adresse">
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-circle me-2"></i>Enregistrer les modifications
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle me-2"></i>Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

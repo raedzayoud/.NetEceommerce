@@ -1,0 +1,44 @@
+﻿@model LoginDto
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <div class="card shadow-lg">
+            <div class="card-body p-4">
+                <h2 class="text-center mb-4 text-primary">Bienvenue</h2>
+                <p class="text-center text-muted">Connectez-vous à votre compte</p>
+                <hr />
+
+                @if (ViewBag.ErrorMessage != null)
+                {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>@ViewBag.ErrorMessage</strong>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                }
+
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label" for="Email">Email</label>
+                        <input asp-for="Email" class="form-control rounded-pill" id="Email" placeholder="Entrez votre email" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="Password">Mot de passe</label>
+                        <input asp-for="Password" type="password" class="form-control rounded-pill" id="Password" placeholder="Entrez votre mot de passe" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="d-grid gap-2 mb-3">
+                        <button type="submit" class="btn btn-primary rounded-pill">Se connecter</button>
+                    </div>
+
+                    <hr />
+                    <div class="d-grid">
+                        <a class="btn btn-outline-secondary rounded-pill" asp-controller="Home" asp-action="Index" role="button">Annuler</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

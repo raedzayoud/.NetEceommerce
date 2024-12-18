@@ -1,0 +1,85 @@
+﻿@model List<Product>
+@{
+    ViewData["Title"] = "Page d'accueil";
+    ViewData["HomePage"] = true;
+}
+
+<div class="text-center">
+    <div class="bg-gradient text-white">
+        <div class="container py-5">
+            <div class="row align-items-center g-5">
+                <div class="col-md-6 text-center">
+                    <h1 class="display-3 fw-bold text-black">Bienvenue au marché de Madina</h1>
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="/images/banner.png" class="img-fluid rounded shadow" alt="Bienvenue au marché de Madina" style="max-width: 80%; height: auto; margin: 0 auto; display: block;" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="bg-light py-5">
+    <div class="container">
+        <h2 class="pb-4 text-center fw-bold text-primary">Nouveaux produits</h2>
+        <div class="row g-4">
+            @foreach (var product in Model)
+            {
+                            <div class="col-lg-3 col-md-6">
+                                <div class="card border-0 shadow h-100 text-center rounded-4">
+                                   
+                                    <div class="p-3">
+                                        <img 
+                                            src="/products/@product.ImageFileName" 
+                                            class="card-img-top rounded" 
+                                            alt="@product.Name - @product.Brand" 
+                                            style="height:180px; object-fit:contain;" />
+                                    </div>
+
+                                    <div class="card-body">
+                                        <h5 class="card-title fw-bold">@product.Name</h5>
+                                        <p class="text-muted mb-2">Marque: @product.Brand | Catégorie: @product.Category</p>
+                                            <h4 class="text-success fw-bold mb-3"> @product.Price TND</h4>
+                                    </div>
+
+                                    <div class="card-footer bg-white border-0 d-flex justify-content-center">
+                                        <a 
+                                            class="btn btn-primary btn-sm me-2" 
+                                            asp-controller="Store" 
+                                            asp-action="Details" 
+                                            asp-route-id="@product.Id" 
+                                            role="button">
+                                            Détails
+                                        </a>
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-outline-success btn-sm" 
+                                            onclick="addToCart(this, @product.Id)">
+                                            <i class="bi bi-cart4"></i> Ajouter au panier
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .bg-gradient {
+        background: linear-gradient(to right, #2BA8E0, #74C044);
+    }
+
+    .bg-gradient .text-center h1 {
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .text-black {
+        color: black !important;
+    }
+
+    .card:hover {
+        transform: scale(1.05);
+        transition: transform 0.3s ease;
+    }
+</style>

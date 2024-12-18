@@ -1,0 +1,130 @@
+﻿@model StoreSearchModel
+
+<form class="row g-3 mb-3">
+    <div class="col-lg-2 col-md-4">
+        <select class="form-select custom-select" name="category" asp-for="Category" onchange="this.form.submit()">
+            <option value="">Toutes les catégories</option>
+            <option value="Phones">Téléphones</option>
+            <option value="Computers">Ordinateurs</option>
+            <option value="Accessories">Accessoires</option>
+            <option value="Printers">Imprimantes</option>
+            <option value="Cameras">Caméras</option>
+            <option value="Other">Autre</option>
+        </select>
+    </div>
+    <div class="col-lg-2 col-md-4">
+        <select class="form-select custom-select" name="sort" asp-for="Sort" onchange="this.form.submit()">
+            <option value="newest">Trier par le plus récent</option>
+            <option value="price_asc">Prix: Croissant</option>
+            <option value="price_desc">Prix: Décroissant</option>
+        </select>
+    </div>
+    <div class="col-lg-6 col-md-12 d-flex">
+        <input class="form-control custom-input me-2" name="search" asp-for="Search" placeholder="Recherche par nom" />
+        <button class="btn btn-outline-success custom-button" type="submit">Rechercher</button>
+    </div>
+</form>
+
+
+<div class="row mb-5 g-3">
+    @foreach (var product in ViewBag.Products)
+    {
+                <div class="col-lg-3 col-md-6">
+                    <div class="rounded border shadow-sm p-3 text-center h-100 product-card">
+                        <img src="/products/@product.ImageFileName" class="img-fluid rounded" alt="Image produit" style="height: 180px; object-fit: cover;" />
+                        <hr>
+                        <h5 class="py-2">@product.Name</h5>
+                        <p class="text-muted">Marque: @product.Brand, Catégorie: @product.Category</p>
+                        <h4 class="mb-3 text-success">@product.Price TND</h4>
+                        <div class="d-flex justify-content-around">
+                            <a class="btn btn-primary btn-sm" asp-controller="Store" asp-action="Details" asp-route-id="@product.Id" role="button">Détails</a>
+                            <button type="button" class="btn btn-warning btn-sm" onclick="addToCart(this, @product.Id)">
+                                Ajouter au panier <i class="bi bi-cart4"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+    }
+</div>
+
+<nav>
+    <ul class="pagination justify-content-center">
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+            string active = i == ViewBag.PageIndex ? "active" : " ";
+                    <li class="page-item @active">
+                        <a class="page-link" asp-route-pageIndex="@i" asp-route-search="@Model.Search" asp-route-brand="@Model.Brand" asp-route-category="@Model.Category" asp-route-sort="@Model.Sort">@i</a>
+                    </li>
+        }
+    </ul>
+</nav>
+
+<!-- CSS supplémentaire pour le style -->
+<style>
+    .product-card {
+        transition: transform 0.3s, box-shadow 0.3s;
+        border-radius: 0.75rem;
+        background-color: #f8f9fa;
+    }
+
+    .product-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-select, .form-control {
+        border-radius: 0.75rem;
+        border: 1px solid #ddd;
+        padding: 0.5rem;
+        transition: border-color 0.3s;
+        background-color: #fff;
+    }
+
+    .form-select:focus, .form-control:focus {
+        border-color: #28a745;
+        outline: none;
+    }
+
+    .pagination .page-link {
+        border-radius: 0.75rem;
+        color: #007bff;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #fff;
+        background-color: #28a745;
+        border-color: #28a745;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #007bff;
+        color: #fff;
+        border-color: #007bff;
+    }
+
+    .custom-select {
+        background-color: #e9ecef;
+    }
+
+    .custom-input {
+        border-color: #ddd;
+    }
+
+    .custom-button {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+    }
+
+    .custom-button:hover {
+        background-color: #218838;
+        border-color: #218838;
+    }
+
+    .d-flex.justify-content-around {
+        gap: 0.5rem;
+    }
+</style>

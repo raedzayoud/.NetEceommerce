@@ -1,0 +1,81 @@
+﻿@{
+}
+
+<script src="https://www.paypal.com/sdk/js?client-id=@(ViewBag.PaypalClientId)&currency=USD"></script>
+
+<div class="mx-auto p-4 rounded border shadow" style="width: 420px; background-color: #f9f9f9;">
+    <h2 class="text-center mb-5 text-primary">Complétez votre commande</h2>
+    <div class="form-group mb-3">
+        <label class="form-label text-muted">Montant total TND</label>
+        <input class="form-control" type="number" id="totalAmount" step="0.01" style="border-color: #ccc;" />
+    </div>
+    <br>
+    <div id="notification-container"></div>
+    <div id="paypal-button-container" class="d-grid gap-2"></div>
+</div>
+
+<script>
+    paypal.Buttons({
+        async createOrder() {
+            const response = await fetch("@Url.ActionLink("CreateOrder", "Checkout")", {
+                method: "POST"
+            });
+
+            const order = await response.json();
+            return order.id;
+        },
+
+        async onApprove(data) {
+            // Capture the funds from the transaction.
+            const response = await fetch("@Url.ActionLink("CompleteOrder", "Checkout")", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    orderID: data.orderID,
+                    deliveryAddress: "@ViewBag.DeliveryAddress"
+                })
+            })
+
+            const details = await response.json();
+
+            // Show success message to buyer
+            if (details == "success") {
+                document.getElementById("notification-container").innerHTML = `
+                    <div class='alert alert-success alert-dismissible fade show' role='alert'>
+                        <strong>The order is created successfully!</strong>
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>
+                `;
+            }
+            else {
+                document.getElementById("notification-container").innerHTML = `
+                    <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                        <strong>Failed to create the order!</strong>
+                        <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                    </div>
+                `;
+            }
+        },
+
+
+        onCancel(data) {
+            document.getElementById("notification-container").innerHTML = `
+                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                    <strong>Payment Canceled!</strong>
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>
+            `;
+        },
+
+        onError(err) {
+            document.getElementById("notification-container").innerHTML = `
+                <div class='alert alert-danger alert-dismissible fade show' role='alert'>
+                    <strong>An error occured! Please retry later.</strong>
+                    <button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+                </div>
+            `;
+        }
+    }).render('#paypal-button-container');
+</script>  
